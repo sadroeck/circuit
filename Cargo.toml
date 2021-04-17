@@ -1,0 +1,16 @@
+[package]
+name = "circuit"
+version = "0.1.0"
+authors = ["Sam De Roeck <sadroeck@gmail.com>"]
+edition = "2018"
+
+[features]
+default = []
+
+[dependencies]
+anyhow = "1.0"
+flume = "0.10"
+
+# Optional runtime dependencies
+tokio = { version = "1.5", optional = true }
+smol = { version = "1.2", optional = true }
