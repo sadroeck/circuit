@@ -1,8 +1,8 @@
-use std::thread::JoinHandle;
 use crate::proc::Proc;
+use std::thread::JoinHandle;
 
 /// Instance of a [`Proc`] which runs offloads a callable into a native OS thread
-pub struct NativeThread<T: Send>(Option<JoinHandle<anyhow::Result<T>>>);
+pub struct NativeThread<T: Send>(pub(crate) Option<JoinHandle<anyhow::Result<T>>>);
 
 impl<T: Send> Proc for NativeThread<T> {
     type Output = T;
@@ -21,6 +21,6 @@ impl<T: Send> Proc for NativeThread<T> {
 
 impl<T: Send> Drop for NativeThread<T> {
     fn drop(&mut self) {
-        if self.join().is_err() {}
+        let _ = self.join();
     }
 }

@@ -1,9 +1,11 @@
+mod combinators;
 mod proc;
 mod proc_ext;
-mod combinators;
 mod runners;
 
 use crate::combinators::{BlockingProc, NopProc};
+use crate::runners::NativeThread;
+use std::future::Future;
 
 /// Execute a future to completion using a tokio current-thread scheduler.
 #[cfg(feature = "tokio")]
@@ -31,11 +33,20 @@ pub fn smol<T: Send>(
 
 /// Executes a function to completion using a blocking call
 pub fn blocking<F, T>(f: F) -> BlockingProc<F, T>
-    where
-        F: FnOnce() -> anyhow::Result<T> + Send,
-        T: Send,
+where
+    F: FnOnce() -> anyhow::Result<T> + Send,
+    T: Send,
 {
     BlockingProc(Some(f))
+}
+
+/// Executes a function to completion on a native OS thread
+pub fn thread<F, T>(f: F) -> NativeThread<T>
+where
+    F: FnOnce() -> anyhow::Result<T> + Send + 'static,
+    T: Send + 'static,
+{
+    NativeThread(Some(std::thread::spawn(f)))
 }
 
 /// Immediately returns without executing.

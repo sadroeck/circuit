@@ -1,18 +1,15 @@
-#[cfg(feature = "span")]
-mod span;
-
 use crate::proc::Proc;
 
 /// Instance of a [`Proc`] which calls a simple function
 pub struct BlockingProc<F, T>(pub(crate) Option<F>)
-    where
-        F: FnOnce() -> anyhow::Result<T> + Send,
-        T: Send;
+where
+    F: FnOnce() -> anyhow::Result<T> + Send,
+    T: Send;
 
 impl<F, T> Proc for BlockingProc<F, T>
-    where
-        F: FnOnce() -> anyhow::Result<T> + Send,
-        T: Send,
+where
+    F: FnOnce() -> anyhow::Result<T> + Send,
+    T: Send,
 {
     type Output = T;
 
@@ -28,9 +25,9 @@ impl<F, T> Proc for BlockingProc<F, T>
 }
 
 impl<F, T> Drop for BlockingProc<F, T>
-    where
-        F: FnOnce() -> anyhow::Result<T> + Send,
-        T: Send,
+where
+    F: FnOnce() -> anyhow::Result<T> + Send,
+    T: Send,
 {
     fn drop(&mut self) {
         if self.join().is_err() {}

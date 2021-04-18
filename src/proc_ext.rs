@@ -1,5 +1,5 @@
-use crate::proc::Proc;
 use crate::combinators::BlockingProc;
+use crate::proc::Proc;
 
 /// Extension trait for [`Proc`] allowing combinators over units of execution
 pub trait ProcExt: Proc + Sized {
@@ -20,18 +20,18 @@ pub trait ProcExt: Proc + Sized {
 /// [`Proc`] combinator that allows combining the results of two units of execution
 /// sharing the same result types
 pub struct AndProc<L, R>
-    where
-        L: Proc + Send,
-        R: Proc + Send,
+where
+    L: Proc + Send,
+    R: Proc + Send,
 {
     left: L,
     right: R,
 }
 
 impl<L, R> Proc for AndProc<L, R>
-    where
-        L: Proc + Send,
-        R: Proc + Send,
+where
+    L: Proc + Send,
+    R: Proc + Send,
 {
     type Output = R::Output;
 
@@ -46,14 +46,6 @@ impl<L, R> Proc for AndProc<L, R>
 }
 
 impl<P: Proc + Send + 'static> ProcExt for P {
-    #[cfg(feature = "span")]
-    fn in_span(self, span: Span) -> SpanProc<Self> {
-        SpanProc {
-            process: self,
-            span,
-        }
-    }
-
     /// Similar to [`Result::and`] but with procs.
     fn and<O: Proc>(self, other: O) -> AndProc<P, O> {
         AndProc {
@@ -80,5 +72,13 @@ impl<P: Proc + Send + 'static> ProcExt for P {
 
     fn boxed(self) -> Box<dyn Proc<Output = Self::Output>> {
         Box::new(self)
+    }
+
+    #[cfg(feature = "span")]
+    fn in_span(self, span: Span) -> SpanProc<Self> {
+        SpanProc {
+            process: self,
+            span,
+        }
     }
 }
