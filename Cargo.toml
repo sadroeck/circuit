@@ -2,7 +2,7 @@
 name = "circuit"
 version = "0.1.0"
 authors = ["Sam De Roeck <sadroeck@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [features]
 default = []
@@ -12,5 +12,5 @@ anyhow = "1.0"
 flume = "0.10"
 
 # Optional runtime dependencies
-tokio = { version = "1.5", optional = true, features = [ "rt", "rt-multi-thread" ] }
+tokio = { version = "1.21", optional = true, features = [ "rt" ] }
 smol = { version = "1.2", optional = true }

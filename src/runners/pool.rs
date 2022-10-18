@@ -54,5 +54,5 @@ where
                 Ok(())
             })
         })
-        .fold(dispatch.boxed(), |x, y| x.and(y).boxed())
+        .fold(dispatch.boxed(), |x, y| x.and_then(y).boxed())
 }

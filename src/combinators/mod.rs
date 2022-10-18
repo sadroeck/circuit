@@ -1,3 +1,9 @@
+mod and;
+mod or;
+
+pub use and::AndThenProc;
+pub use or::OrElseProc;
+
 use crate::proc::Proc;
 
 /// Instance of a [`Proc`] which calls a simple function
@@ -21,7 +27,9 @@ where
         }
     }
 
-    fn forget(&mut self) {}
+    fn forget(&mut self) {
+        self.0.take();
+    }
 }
 
 impl<F, T> Drop for BlockingProc<F, T>

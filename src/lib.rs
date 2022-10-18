@@ -5,12 +5,11 @@ mod runners;
 
 use crate::combinators::{BlockingProc, NopProc};
 use crate::runners::NativeThread;
-use std::future::Future;
 
 /// Execute a future to completion using a tokio current-thread scheduler.
 #[cfg(feature = "tokio")]
 pub fn tokio<T: Send>(
-    fut: impl Future<Output = anyhow::Result<T>> + Send + 'static,
+    fut: impl std::future::Future<Output = anyhow::Result<T>> + Send + 'static,
 ) -> BlockingProc<impl FnOnce() -> anyhow::Result<T>, T> {
     blocking(move || {
         let rt = tokio::runtime::Builder::new_current_thread()
@@ -23,7 +22,7 @@ pub fn tokio<T: Send>(
 /// Execute a future to completion using a [`smol::LocalExecutor`].
 #[cfg(feature = "smol")]
 pub fn smol<T: Send>(
-    fut: impl Future<Output = anyhow::Result<T>> + Send + 'static,
+    fut: impl std::future::Future<Output = anyhow::Result<T>> + Send + 'static,
 ) -> BlockingProc<impl FnOnce() -> anyhow::Result<T>, T> {
     blocking(move || {
         let executor = smol::LocalExecutor::default();
