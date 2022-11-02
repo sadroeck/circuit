@@ -5,6 +5,8 @@ mod runners;
 
 pub use crate::combinators::*;
 pub use crate::runners::*;
+pub use proc::Proc;
+pub use proc_ext::ProcExt;
 
 /// Execute a future to completion using a tokio current-thread scheduler.
 #[cfg(feature = "tokio")]
