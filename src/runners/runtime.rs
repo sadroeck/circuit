@@ -12,6 +12,12 @@ pub enum TaskRuntime {
     Entered(Handle),
 }
 
+impl Default for TaskRuntime {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl TaskRuntime {
     pub fn new() -> Self {
         let (runtime_tx, runtime_rx) = flume::bounded(1);
