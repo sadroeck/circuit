@@ -9,7 +9,7 @@ pub trait ProcExt: Proc + Sized {
 }
 
 impl<P: Proc + Send + 'static> ProcExt for P {
-    /// Similar to [`Result::and`] but with procs.
+    /// Similar to [`Result::and`] but with [`Proc`]s.
     fn and_then<O: Proc>(self, other: O) -> AndThenProc<P, O> {
         AndThenProc {
             left: self,
@@ -17,7 +17,7 @@ impl<P: Proc + Send + 'static> ProcExt for P {
         }
     }
 
-    /// Similar to [`Result::or_else`] but with procs.
+    /// Similar to [`Result::or_else`] but with [`Proc`]s.
     fn or_else<O: Proc<Output = P::Output>>(self, other: O) -> OrElseProc<P, O> {
         OrElseProc {
             left: self,
@@ -25,6 +25,7 @@ impl<P: Proc + Send + 'static> ProcExt for P {
         }
     }
 
+    /// Provides dynamic dispatch for [`Proc`]
     fn boxed(self) -> Box<dyn Proc<Output = Self::Output>> {
         Box::new(self)
     }

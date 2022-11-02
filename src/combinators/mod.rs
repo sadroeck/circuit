@@ -1,8 +1,12 @@
 mod and;
+mod join_task;
 mod or;
+mod select_task;
 
 pub use and::AndThenProc;
+pub use join_task::JoinTasks;
 pub use or::OrElseProc;
+pub use select_task::SelectTasks;
 
 use crate::proc::Proc;
 

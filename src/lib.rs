@@ -3,8 +3,8 @@ mod proc;
 mod proc_ext;
 mod runners;
 
-use crate::combinators::{BlockingProc, NopProc};
-use crate::runners::NativeThread;
+pub use crate::combinators::*;
+pub use crate::runners::*;
 
 /// Execute a future to completion using a tokio current-thread scheduler.
 #[cfg(feature = "tokio")]
@@ -20,15 +20,15 @@ pub fn tokio<T: Send>(
 }
 
 /// Execute a future to completion using a [`smol::LocalExecutor`].
-#[cfg(feature = "smol")]
-pub fn smol<T: Send>(
-    fut: impl std::future::Future<Output = anyhow::Result<T>> + Send + 'static,
-) -> BlockingProc<impl FnOnce() -> anyhow::Result<T>, T> {
-    blocking(move || {
-        let executor = smol::LocalExecutor::default();
-        smol::block_on(executor.run(fut))
-    })
-}
+// #[cfg(feature = "smol")]
+// pub fn smol<T: Send>(
+//     fut: impl std::future::Future<Output = anyhow::Result<T>> + Send + 'static,
+// ) -> BlockingProc<impl FnOnce() -> anyhow::Result<T>, T> {
+//     blocking(move || {
+//         let executor = smol::LocalExecutor::default();
+//         smol::block_on(executor.run(fut))
+//     })
+// }
 
 /// Executes a function to completion using a blocking call
 pub fn blocking<F, T>(f: F) -> BlockingProc<F, T>
